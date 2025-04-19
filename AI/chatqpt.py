@@ -1,24 +1,22 @@
+import google.generativeai as genai
 
-import openai
+# Cấu hình API Key
+genai.configure(api_key="AIzaSyAUrSLOFqM7Eg8REjSxEpFAxk_MzZc8PIk")
 
-# Đặt API Key của bạn
-openai.api_key = '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'
-
-def get_openai_response(prompt):
-    # Gửi yêu cầu đến OpenAI API với cách gọi đúng
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  # Hoặc "gpt-4" tùy thuộc vào mô hình bạn muốn sử dụng
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
-    )
+# Hàm để gửi yêu cầu và nhận phản hồi từ mô hình
+def get_gemini_response(prompt):
+    # Lấy mô hình Gemini 2.0 Flash 001
+    model = genai.GenerativeModel('models/gemini-1.5-pro')  # Thêm mô hình mới vào đây
     
-    # Trả về kết quả text từ API
-    return response['choices'][0]['message']['content']
+    # Gửi prompt và lấy phản hồi bằng phương thức 'generate_content'
+    response = model.generate_content(prompt)  # Sử dụng phương thức 'generate_content'
+    
+    # Trả về văn bản phản hồi
+    return response.text
 
-# Nhập prompt từ người dùng
-prompt = input("Nhập prompt của bạn: ")
-
-# Gọi hàm với prompt người dùng nhập
-response_text = get_openai_response(prompt)
-print("Kết quả từ AI:", response_text)
+# Phần chính của chương trình
+if __name__ == "__main__":
+    prompt = input("Nhập prompt của bạn: ")  # Nhập prompt từ người dùng
+    print("Đang gửi yêu cầu tới Gemini...\n")
+    result = get_gemini_response(prompt)
+    print("Kết quả từ Gemini:\n", result)
